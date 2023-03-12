@@ -6,7 +6,7 @@ SET(CMAKE_CXX_FLAGS "-fPIC")
 
 
 add_definitions(-D RTE_CACHE_LINE_SIZE=64)
-add_definitions(-D CPU_SETSIZE)
+add_definitions(-D CPU_SETSIZE -D _GNU_SOURCE)
 
 #for libbpf
 set(LIBBPF_DIR /build/root/usr)
@@ -30,14 +30,20 @@ set(util_LIB
 ${CMAKE_SOURCE_DIR}/lib/util/packet.c
 ${CMAKE_SOURCE_DIR}/lib/log/my_log.c
 ${CMAKE_SOURCE_DIR}/lib/thirdparty/dpdk/eal/common/eal_common_config.c
+${CMAKE_SOURCE_DIR}/lib/thirdparty/dpdk/eal/common/eal_common_cpuflags.c
+${CMAKE_SOURCE_DIR}/lib/thirdparty/dpdk/eal/common/eal_common_debug.c
 ${CMAKE_SOURCE_DIR}/lib/thirdparty/dpdk/eal/common/eal_common_errno.c
+${CMAKE_SOURCE_DIR}/lib/thirdparty/dpdk/eal/common/eal_common_launch.c
 ${CMAKE_SOURCE_DIR}/lib/thirdparty/dpdk/eal/common/eal_common_lcore.c
+${CMAKE_SOURCE_DIR}/lib/thirdparty/dpdk/eal/common/eal_common_log.c
 ${CMAKE_SOURCE_DIR}/lib/thirdparty/dpdk/eal/common/eal_common_timer.c
 ${CMAKE_SOURCE_DIR}/lib/thirdparty/dpdk/eal/common/eal_common_thread.c
 ${CMAKE_SOURCE_DIR}/lib/thirdparty/dpdk/eal/common/rte_random.c
 ${CMAKE_SOURCE_DIR}/lib/thirdparty/dpdk/eal/linux/eal.c
+${CMAKE_SOURCE_DIR}/lib/thirdparty/dpdk/eal/linux/eal_debug.c
 ${CMAKE_SOURCE_DIR}/lib/thirdparty/dpdk/eal/linux/eal_thread.c
 ${CMAKE_SOURCE_DIR}/lib/thirdparty/dpdk/eal/linux/eal_timer.c
+${CMAKE_SOURCE_DIR}/lib/thirdparty/dpdk/eal/linux/eal_lcore.c
 ${CMAKE_SOURCE_DIR}/lib/thirdparty/dpdk/eal/linux/eal_unix_timer.c
 ${CMAKE_SOURCE_DIR}/lib/thirdparty/dpdk/eal/x86/rte_cycles.c
 ${CMAKE_SOURCE_DIR}/lib/thirdparty/dpdk/eal/x86/rte_cpuflags.c
@@ -57,7 +63,7 @@ set(EXECUTABLE_NAME "time")
 add_executable(${EXECUTABLE_NAME} 
 ${CMAKE_SOURCE_DIR}/sample/time_test.c
 )
-target_link_libraries(${EXECUTABLE_NAME} util)
+target_link_libraries(${EXECUTABLE_NAME} util pthread)
 
 set(EXECUTABLE_NAME "xdpsock")
 add_executable(${EXECUTABLE_NAME} 
@@ -69,11 +75,11 @@ set(EXECUTABLE_NAME "memtest")
 add_executable(${EXECUTABLE_NAME} 
 ${CMAKE_SOURCE_DIR}/sample/mempool_test.c
 )
-target_link_libraries(${EXECUTABLE_NAME} mem util)
+target_link_libraries(${EXECUTABLE_NAME} mem util pthread)
 
 set(EXECUTABLE_NAME "ncxslab")
 add_executable(${EXECUTABLE_NAME} 
 ${CMAKE_SOURCE_DIR}/sample/ncxslab_test.c
 )
-target_link_libraries(${EXECUTABLE_NAME} mem util)
+target_link_libraries(${EXECUTABLE_NAME} mem util pthread)
 #cmake .. -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++

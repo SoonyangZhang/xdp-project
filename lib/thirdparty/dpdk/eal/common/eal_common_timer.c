@@ -12,10 +12,10 @@
 
 #include <rte_common.h>
 #include <rte_compat.h>
-//#include <rte_log.h>
+#include <rte_log.h>
 #include <rte_cycles.h>
 #include <rte_pause.h>
-//#include <rte_eal.h>
+#include <rte_eal.h>
 
 #include "eal_private.h"
 //#include "eal_memcfg.h"
@@ -61,7 +61,7 @@ set_tsc_freq(void)
 	uint64_t freq=0;
     /*
 	freq = get_tsc_freq_arch();
-	/*if (!freq){
+	if (!freq){
         //this is not right;
         freq = get_tsc_freq();
     }*/

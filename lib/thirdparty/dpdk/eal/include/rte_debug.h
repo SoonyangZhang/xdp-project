@@ -14,7 +14,7 @@
  * the implementation is architecture-specific.
  */
 
-//#include "rte_log.h"
+#include "rte_log.h"
 #include "rte_common.h"
 #include "rte_branch_prediction.h"
 
@@ -25,7 +25,7 @@ extern "C" {
 /**
  * Dump the stack of the calling core to the console.
  */
-//void rte_dump_stack(void);
+void rte_dump_stack(void);
 
 /**
  * Provide notification of a critical non-recoverable error and terminate

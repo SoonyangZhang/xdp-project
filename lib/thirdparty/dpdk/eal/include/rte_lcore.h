@@ -2,8 +2,7 @@
  * Copyright(c) 2010-2014 Intel Corporation
  */
 
-#ifndef _RTE_LCORE_H_
-#define _RTE_LCORE_H_
+#pragma once
 
 /**
  * @file
@@ -22,6 +21,7 @@ extern "C" {
 #endif
 
 #define LCORE_ID_ANY     UINT32_MAX       /**< Any lcore. */
+#define SOCKET_ID_ANY -1                    /**< Any NUMA socket. */
 
 RTE_DECLARE_PER_LCORE(unsigned, _lcore_id);  /**< Per thread "lcore id". */
 
@@ -120,7 +120,86 @@ unsigned int rte_lcore_count(void);
  *   The relative index, or -1 if not enabled.
  */
 int rte_lcore_index(int lcore_id);
+/**
+ * Return the ID of the physical socket of the logical core we are
+ * running on.
+ * @return
+ *   the ID of current lcoreid's physical socket
+ */
+unsigned int rte_socket_id(void);
 
+/**
+ * Return number of physical sockets detected on the system.
+ *
+ * Note that number of nodes may not be correspondent to their physical id's:
+ * for example, a system may report two socket id's, but the actual socket id's
+ * may be 0 and 8.
+ *
+ * @return
+ *   the number of physical sockets as recognized by EAL
+ */
+unsigned int
+rte_socket_count(void);
+
+/**
+ * Return socket id with a particular index.
+ *
+ * This will return socket id at a particular position in list of all detected
+ * physical socket id's. For example, on a machine with sockets [0, 8], passing
+ * 1 as a parameter will return 8.
+ *
+ * @param idx
+ *   index of physical socket id to return
+ *
+ * @return
+ *   - physical socket id as recognized by EAL
+ *   - -1 on error, with errno set to EINVAL
+ */
+int
+rte_socket_id_by_idx(unsigned int idx);
+
+/**
+ * Get the ID of the physical socket of the specified lcore
+ *
+ * @param lcore_id
+ *   the targeted lcore, which MUST be between 0 and RTE_MAX_LCORE-1.
+ * @return
+ *   the ID of lcoreid's physical socket
+ */
+unsigned int
+rte_lcore_to_socket_id(unsigned int lcore_id);
+
+/**
+ * @warning
+ * @b EXPERIMENTAL: this API may change without prior notice.
+ *
+ * Return the id of the lcore on a socket starting from zero.
+ *
+ * @param lcore_id
+ *   The targeted lcore, or -1 for the current one.
+ * @return
+ *   The relative index, or -1 if not enabled.
+ */
+__rte_experimental
+int
+rte_lcore_to_cpu_id(int lcore_id);
+
+#ifdef RTE_HAS_CPUSET
+
+/**
+ * @warning
+ * @b EXPERIMENTAL: this API may change without prior notice.
+ *
+ * Return the cpuset for a given lcore.
+ * @param lcore_id
+ *   the targeted lcore, which MUST be between 0 and RTE_MAX_LCORE-1.
+ * @return
+ *   The cpuset of that lcore
+ */
+__rte_experimental
+rte_cpuset_t
+rte_lcore_cpuset(unsigned int lcore_id);
+#endif /* RTE_HAS_CPUSET */
 /**
  * Test if an lcore is enabled.
  *
@@ -199,5 +278,3 @@ int rte_thread_getname(pthread_t id, char *name, size_t len);
 }
 #endif
 
-
-#endif /* _RTE_LCORE_H_ */

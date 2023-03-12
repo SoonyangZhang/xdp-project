@@ -72,6 +72,7 @@ static LogCategory *g_log_ptr=NULL;
 #define log_fatal(...) my_log_output(g_log_ptr,LOG_FATAL, __FILE__, __LINE__, __VA_ARGS__)
 #define log_fatal_check(...) my_log_output(NULL,LOG_FATAL, __FILE__, __LINE__, __VA_ARGS__)
 
+void my_vlog_output(LogCategory *log,int level,const char *file,int line,const char *fmt,va_list ap);
 #define CHECK(x) \
     if(!(x))  log_fatal_check("check failed:" #x);
 

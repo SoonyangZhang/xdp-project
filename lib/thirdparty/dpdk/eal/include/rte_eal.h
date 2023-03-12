@@ -1,6 +1,13 @@
 #pragma once
 #include <rte_compat.h>
 #include <rte_per_lcore.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
+#define RTE_MAGIC 19820526 /**< Magic number written by the main partition when ready. */
+
+/* Maximum thread_name length. */
+#define RTE_MAX_THREAD_NAME_LEN 16
 /**
  * A wrap API for syscall gettid.
  *
@@ -77,3 +84,21 @@ static inline int rte_gettid(void)
  *     ENOEXEC indicates that a service core failed to launch successfully.
  */
 int rte_eal_init(int argc, char **argv);
+
+/**
+ * Clean up the Environment Abstraction Layer (EAL)
+ *
+ * This function must be called to release any internal resources that EAL has
+ * allocated during rte_eal_init(). After this call, no DPDK function calls may
+ * be made. It is expected that common usage of this function is to call it
+ * just before terminating the process.
+ *
+ * @return
+ *  - 0 Successfully released all internal EAL resources.
+ *  - -EFAULT There was an error in releasing all resources.
+ */
+int rte_eal_cleanup(void);
+
+#ifdef __cplusplus
+}
+#endif
